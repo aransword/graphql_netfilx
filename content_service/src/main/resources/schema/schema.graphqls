@@ -1,0 +1,12 @@
+type Query {
+    show(id: ID!): Show
+    shows: [Show]
+}
+
+type Show @key(fields: "id") {
+    id: ID!
+    title: String!
+    description: String
+    releaseYear: Int
+    previewVideoUrl: String
+}
