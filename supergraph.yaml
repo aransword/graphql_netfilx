@@ -1,0 +1,15 @@
+federation_version: =2.3.0
+
+subgraphs:
+  users:
+    routing_url: http://localhost:8083/graphql
+    schema:
+      subgraph_url: http://localhost:8083/graphql
+  content:
+    routing_url: http://localhost:8081/graphql
+    schema:
+      subgraph_url: http://localhost:8081/graphql
+  reviews:
+    routing_url: http://localhost:8082/graphql
+    schema:
+      subgraph_url: http://localhost:8082/graphql

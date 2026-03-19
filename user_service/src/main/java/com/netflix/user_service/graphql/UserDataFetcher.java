@@ -18,13 +18,13 @@ public class UserDataFetcher {
     private final UserRepository userRepository;
 
     // 1. 단일 유저 조회 (Query의 user 필드와 매핑)
-    @DgsQuery
+    @DgsQuery(field = "user")
     public User user(@InputArgument Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
     // 2. 전체 유저 조회 (Query의 users 필드와 매핑)
-    @DgsQuery
+    @DgsQuery(field = "users")
     public List<User> users() {
         return userRepository.findAll();
     }

@@ -18,13 +18,13 @@ public class ContentDataFetcher {
     private final ShowRepository showRepository;
 
     // 1. 단일 컨텐츠 조회 (Query의 show 필드와 매핑)
-    @DgsQuery
+    @DgsQuery(field = "show")
     public Show show(@InputArgument Long id) {
         return showRepository.findById(id).orElse(null);
     }
 
     // 2. 전체 컨텐츠 조회 (Query의 show 필드와 매핑)
-    @DgsQuery
+    @DgsQuery(field = "shows")
     public List<Show> shows() {
         return showRepository.findAll();
     }
