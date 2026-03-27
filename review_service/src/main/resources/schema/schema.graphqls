@@ -6,22 +6,15 @@ type Review {
     id: ID!
     rating: Int!
     comment: String
-    # 리뷰에서 유저와 쇼의 정보를 바로 가져올 수 있도록 필드 추가
     user: User
     show: Show
 }
 
-# ---------------------------------------------------------
-# [Federation 마법] 외부 서비스의 타입을 확장(extend)합니다.
-# ---------------------------------------------------------
-
-# User 서비스에 있는 User 타입을 확장해서 'reviews' 필드를 추가합니다.
 type User @key(fields: "id") @extends {
     id: ID! @external
     reviews: [Review]
 }
 
-# Content 서비스에 있는 Show 타입을 확장해서 'reviews' 필드를 추가합니다.
 type Show @key(fields: "id") @extends {
     id: ID! @external
     reviews: [Review]

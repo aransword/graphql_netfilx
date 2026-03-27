@@ -32,7 +32,6 @@ public class UserDataFetcher {
     // ⭐ 3. Federation의 핵심! (다른 서브그래프에서 이 유저를 참조할 때 호출됨)
     @DgsEntityFetcher(name = "User")
     public User resolveUserReference(Map<String, Object> values) {
-        // Apollo Router가 "id가 1인 User 데이터 좀 줘!" 라고 할 때 이 메서드가 실행돼.
         String idStr = (String) values.get("id");
         if (idStr != null) {
             Long id = Long.parseLong(idStr);

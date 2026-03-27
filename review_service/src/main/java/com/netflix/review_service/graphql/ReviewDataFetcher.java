@@ -6,6 +6,8 @@ import com.netflix.graphql.dgs.InputArgument;
 import com.netflix.graphql.dgs.DgsData;
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
 import com.netflix.graphql.dgs.DgsEntityFetcher;
+import com.netflix.review_service.dto.Show;
+import com.netflix.review_service.dto.User;
 import com.netflix.review_service.model.Review;
 import com.netflix.review_service.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,6 @@ public class ReviewDataFetcher {
     @DgsData(parentType = "Review", field = "user")
     public Map<String, Object> fetchUserForReview(DgsDataFetchingEnvironment dfe) {
         Review review = dfe.getSource();
-        // 실제 Entity 객체 대신 ID만 담은 Map을 리턴하면, 라우터가 알아서 User Service로 토스함!
         return Map.of("id", review.getUserId().toString());
     }
 
@@ -42,29 +43,30 @@ public class ReviewDataFetcher {
 
     // -------------------------------------------------------------------
     // [2] 외부 타입(User, Show)의 확장(extends) 필드 구현
-    // User/Show 서비스에서 "이 유저의 리뷰 목록 줘!", "이 영화의 리뷰 목록 줘!" 할 때 실행됨
     // -------------------------------------------------------------------
     @DgsEntityFetcher(name = "User")
-    public Map<String, Object> resolveUser(Map<String, Object> values) {
-        return values; // 라우터가 넘겨준 User ID를 그대로 유지
+    public User resolveUser(Map<String, Object> values) {
+        Long id = Long.parseLong(String.valueOf(values.get("id")));
+        return new User(id);
     }
 
     @DgsData(parentType = "User", field = "reviews")
     public List<Review> fetchReviewsForUser(DgsDataFetchingEnvironment dfe) {
-        Map<String, Object> user = dfe.getSource();
-        Long userId = Long.parseLong((String) user.get("id"));
+        User user = dfe.getSource();
+        Long userId = user.getId();
         return reviewRepository.findByUserId(userId);
     }
 
     @DgsEntityFetcher(name = "Show")
-    public Map<String, Object> resolveShow(Map<String, Object> values) {
-        return values; // 라우터가 넘겨준 Show ID를 그대로 유지
+    public Show resolveShow(Map<String, Object> values) {
+        Long id = Long.parseLong(String.valueOf(values.get("id")));
+        return new Show(id);
     }
 
     @DgsData(parentType = "Show", field = "reviews")
     public List<Review> fetchReviewsForShow(DgsDataFetchingEnvironment dfe) {
-        Map<String, Object> show = dfe.getSource();
-        Long showId = Long.parseLong((String) show.get("id"));
+        Show show = dfe.getSource();
+        Long showId = show.getId();
         return reviewRepository.findByShowId(showId);
     }
 }
